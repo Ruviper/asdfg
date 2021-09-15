@@ -7,6 +7,10 @@ import { auth } from '../../firebase';
 import { emailValidation, passwordValidation } from '../../validations/validations';
  
 const RegisterContainer = styled.div`
+  @media (max-width: 640px) {
+    width: 50%;
+  }
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,10 +18,6 @@ const RegisterContainer = styled.div`
   width: 90%;
   height: 100%;
   margin: 0 auto;
-
-  @media (min-width: 641px) {
-    width: 50%;
-  }
 `;
 
 const Input = styled.input`

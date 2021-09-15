@@ -6,6 +6,10 @@ import { useHistory } from "react-router-dom";
 import { auth, db } from '../../firebase';
  
 const AccounterContainer = styled.div`
+  @media (max-width: 640px) {
+    width: 50%;
+  }
+  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,9 +18,6 @@ const AccounterContainer = styled.div`
   height: 100%;
   margin: 0 auto;
 
-  @media (min-width: 640px) {
-    width: 50%;
-  }
 `;
 
 const Title = styled.h1`

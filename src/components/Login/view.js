@@ -7,17 +7,30 @@ import { auth } from '../../firebase';
 import { emailValidation, passwordValidation } from '../../validations/validations';
  
 const LoginContainer = styled.div`
+  @media (max-width: 640px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
+  }
+
+  width: 50%;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 90%;
-  height: 100%;
-  margin: 0 auto;
-
-  @media (min-width: 641px) {
-    width: 50%;
-  }
+  width: 100%;
 `;
 
 const Input = styled.input`
@@ -71,15 +84,19 @@ const Login = () => {
     return history.push('/accounter')
   }
 
-  console.log(auth._delegate.currentUser.email)
-
   return (
 
     <LoginContainer>
-      <div>
-        <PadlockImage src="../../assets/padlock.svg" />
-      </div>
-      <form
+      {auth ? (
+        <div>
+          <PadlockImage src="../../assets/candadoLogin.svg" />
+        </div>
+      ) : (
+        <div>
+          <PadlockImage src="../../assets/imagenregistro.svg" />
+        </div>
+      )}
+      <Form
         onSubmit=""
       >
         <Input
@@ -104,7 +121,7 @@ const Login = () => {
         >
           Login
         </LoginButton>
-        {auth._delegate.currentUser.email && (
+        {auth && (
           <LoginButton
             type="submit"
             onClick={handleSubmitCreateUser}
@@ -112,7 +129,7 @@ const Login = () => {
             Register
           </LoginButton>
         )}
-      </form>
+      </Form>
     </LoginContainer>
   );
 }
