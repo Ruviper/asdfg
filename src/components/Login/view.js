@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 import { Alert } from 'react-bootstrap';
+import { collection, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 
 import { emailValidation, passwordValidation } from '../../validations/validations';
  
@@ -17,8 +19,14 @@ const LoginContainer = styled.div`
     height: 100%;
     margin: 0 auto;
   }
-
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 50%;
+  height: 100%;
+  margin: 0 auto;
 `;
 
 const Form = styled.form`
@@ -83,14 +91,52 @@ const Login = () => {
     }
   }
   
+  console.log(auth)
+  
   const handleSubmitLoginUser = async(e) => {
     e.preventDefault()
 
     try {
       setError('')
       await auth.signInWithEmailAndPassword(email, password)
-      return history.push('/accounter')
+      // const docRef = doc(db, "users", email);
+      // console.log('email', email)
+      // const docSnap = await getDoc(docRef);
+      // console.log('docSnap.email', docSnap.data().email === email)
+      // const timeStamp = docSnap.data().date.seconds
+      // console.log('timeStamp', timeStamp)
+
+      // if (docSnap.exists()) {
+      //   console.log("Document data:", docSnap.data());
+      // } else {
+      //   // doc.data() will be undefined in this case
+      //   console.log("No such document!");
+      // }
+      return 
+      // history.push('/accounter')
     } catch {
+      const docRef = doc(db, "users", "QiNAHHggUWDLsHgqcs7B");
+      console.log('email', email)
+      const docSnap = await getDoc(docRef);
+      console.log('docSnap.email', docSnap.data().email)
+      console.log('isTrue???', docSnap.data().email === email)
+      const timestamp = docSnap.data().date
+      console.log('timeStamp', timestamp)
+      var date = new Date(timestamp);
+
+      console.log("Date: "+date.getDate()+
+        "/"+(date.getMonth()+1)+
+        "/"+date.getFullYear()+
+        " "+date.getHours()+
+        ":"+date.getMinutes()+
+        ":"+date.getSeconds());
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
       setError('Revisa tus datos de acceso')
     }
   }

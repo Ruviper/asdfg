@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { doc, setDoc } from "firebase/firestore";
+import { ref, set } from 'firebase/database';
 import { useHistory } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
 
 import { auth, db } from '../../firebase';
  
@@ -68,24 +70,33 @@ const LogoutButton = styled.button`
   padding: 8px 16px;
   margin-top: 60px;
 `
+console.log('auth email!!!!', auth._delegate.currentUser !== null ? auth._delegate.currentUser.email : 'es null' )
 console.log(auth)
 const Accounter = () => {
   let history = useHistory();
 
   const logout = async() => {
-    auth.signOut()
-    saveLogoutDate({ date: new Date, email: 'test1@hotmail.com'})
-    return history.push('/')
+    const fecha = new Date();
+    const timestamp = fecha.getTime();
+    await saveLogoutDate({ date: timestamp, email: auth._delegate.currentUser.email })
+    // await auth.signOut()
+    return
+    // return history.push('/')
   }
 
   const saveLogoutDate = async ({ date, email }) => {
     console.log('entro en saveLogoutDate fuction')
     console.log(date, email)
 
-    await setDoc(doc(db, "logoutDate", "date"), {
-      date: date,
-      email: email
-    })
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        date: date,
+        email: email,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
