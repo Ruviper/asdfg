@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
+import { Alert } from 'react-bootstrap';
 
 import { auth } from '../../firebase';
 
@@ -60,6 +61,7 @@ const Login = () => {
     email: '',
     password: '',
   });
+  const [error, setError] = useState('');
 
   const { email, password } = loginObject;
 
@@ -74,28 +76,36 @@ const Login = () => {
 
   const handleSubmitCreateUser = async(e) => {
     e.preventDefault()
-    auth.createUserWithEmailAndPassword(email, password)
-    history.push('/login')
+    
+    try {
+      setError('')
+      await auth.createUserWithEmailAndPassword(email, password)
+      history.push('/login')
+    } catch {
+      setError('Revisa los datos para la creación del usuario')
+    }
   }
   
   const handleSubmitLoginUser = async(e) => {
     e.preventDefault()
-    auth.signInWithEmailAndPassword(email, password)
-    return history.push('/accounter')
+
+    try {
+      setError('')
+      await auth.signInWithEmailAndPassword(email, password)
+      return history.push('/accounter')
+    } catch {
+      setError('Revisa los datos para loguearte')
+    }
   }
+  console.log('ERROR', error)
 
   return (
 
     <LoginContainer>
-      {auth ? (
-        <div>
-          <PadlockImage src="../../assets/candadoLogin.svg" />
-        </div>
-      ) : (
-        <div>
-          <PadlockImage src="../../assets/imagenregistro.svg" />
-        </div>
-      )}
+      <div>
+        <PadlockImage src="../../assets/padlock.svg" />
+      </div>
+      {error && <Alert variant="danger">{error}</Alert>}
       <Form
         onSubmit=""
       >
@@ -105,7 +115,12 @@ const Login = () => {
           placeholder="Email"
           value={email}
           onChange={handleChangeLogin}
-         //  onBlur={emailValidation({ email })}
+          onFocus={() => setError('')}
+          onBlur={() => {
+            setError('')
+            emailValidation({ email })
+            return !emailValidation && setError('Email inválido')
+          }}
         />
         <Input
           type="password"
@@ -113,6 +128,12 @@ const Login = () => {
           placeholder="Password"
           value={password}
           onChange={handleChangeLogin}
+          onFocus={() => setError('')}
+          onBlur={() => {
+            setError('')
+            passwordValidation({ password })
+            return !passwordValidation && setError('Password inválido')
+          }}
           // onBlur={passwordValidation({ password })}
         />
         <LoginButton
