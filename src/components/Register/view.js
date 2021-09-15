@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import { auth } from '../../firebase';
 
-import { emailValidation, passwordValidation } from '../../validations/validations';
+// import { emailValidation, passwordValidation } from '../../validations/validations';
  
 const RegisterContainer = styled.div`
   @media (max-width: 640px) {

@@ -8,6 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 
 import { emailValidation, passwordValidation } from '../../validations/validations';
+import ButtonComponent from '../Button'
  
 const LoginContainer = styled.div`
   @media (max-width: 640px) {
@@ -92,7 +93,7 @@ const Login = () => {
   }
   
   console.log(auth)
-  
+
   const handleSubmitLoginUser = async(e) => {
     e.preventDefault()
 
@@ -178,18 +179,16 @@ const Login = () => {
             return
           }}
         />
-        <LoginButton
+        <ButtonComponent
           type="submit"
           onClick={handleSubmitLoginUser}
-        >
-          Login
-        </LoginButton>
-        <LoginButton
+          title="Login"
+        />
+        <ButtonComponent
           type="submit"
           onClick={handleSubmitCreateUser}
-        >
-          Register
-        </LoginButton>
+          title="Register"
+        />
       </Form>
     </LoginContainer>
   );

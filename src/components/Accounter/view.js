@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
 
 import { auth, db } from '../../firebase';
+import ButtonComponent from '../Button'
  
 const AccounterContainer = styled.div`
   @media (max-width: 640px) {
@@ -39,7 +40,7 @@ const TimeContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-around;
-  margin-top: 32px;
+  margin: 32px 0;
 `;
 
 const TimeColumn = styled.div`
@@ -63,15 +64,9 @@ const TimeText = styled.p`
   font-weight: 400;
 `;
 
-const LogoutButton = styled.button`
-  width: calc(100% - 100px);
-  background-color: #1973b8;
-  color: #fff;
-  padding: 8px 16px;
-  margin-top: 60px;
-`
 console.log('auth email!!!!', auth._delegate.currentUser !== null ? auth._delegate.currentUser.email : 'es null' )
 console.log(auth)
+
 const Accounter = () => {
   let history = useHistory();
 
@@ -125,11 +120,11 @@ const Accounter = () => {
           <TimeText>seconds</TimeText>
         </TimeColumn>
       </TimeContainer>
-      <LogoutButton
+      <ButtonComponent
         onClick={logout}
-      >
-          Logout
-      </LogoutButton>
+        title="Logout"
+        type="submit"
+      />
     </AccounterContainer>
   );
 }
