@@ -6,7 +6,7 @@ import { auth } from '../../firebase';
 
 import { emailValidation, passwordValidation } from '../../validations/validations';
  
-const LoginContainer = styled.div`
+const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,13 +28,13 @@ const Input = styled.input`
   margin-bottom: 16px;
 `;
 
-const PadlockImage = styled.img`
+const registerImage = styled.img`
   width: 100px;
   height: 100px;
   margin-bottom: 24px;
 `
 
-const LoginButton = styled.button`
+const RegisterButton = styled.button`
   width: calc(100% - 100px);
   background-color: #1973b8;
   color: #fff;
@@ -42,52 +42,47 @@ const LoginButton = styled.button`
   margin-top: 16px;
 `
 
-const Login = () => {
-  const [loginObject, setLoginObject ] = useState({
+const Register = () => {
+  const [registerObject, setRegisterObject ] = useState({
     email: '',
-    password: '',
+    password: ''
   });
 
-  const { email, password } = loginObject;
+  const { email, password } = registerObject;
 
   let history = useHistory();
 
-  const handleChangeLogin = e => (
-    setLoginObject({
-      ...loginObject,
+  const handleChangeRegister = e => (
+    setRegisterObject({
+      ...registerObject,
       [e.target.name]: e.target.value
     })
   )
 
   const handleSubmitCreateUser = async(e) => {
+    console.log(auth._delegate.currentUser)
+    debugger
     e.preventDefault()
     auth.createUserWithEmailAndPassword(email, password)
     history.push('/login')
   }
-  
-  const handleSubmitLoginUser = async(e) => {
-    e.preventDefault()
-    auth.signInWithEmailAndPassword(email, password)
-    return history.push('/accounter')
-  }
 
-  console.log(auth._delegate.currentUser.email)
-
+  console.log(auth)
   return (
 
-    <LoginContainer>
+    <RegisterContainer>
       <div>
-        <PadlockImage src="../../assets/padlock.svg" />
+        <registerImage src="" />
       </div>
       <form
-        onSubmit=""
+        onSubmit={handleSubmitCreateUser}
       >
         <Input
           type="email"
           name="email"
           placeholder="Email"
           value={email}
-          onChange={handleChangeLogin}
+          onChange={handleChangeRegister}
          //  onBlur={emailValidation({ email })}
         />
         <Input
@@ -95,26 +90,17 @@ const Login = () => {
           name="password"
           placeholder="Password"
           value={password}
-          onChange={handleChangeLogin}
+          onChange={handleChangeRegister}
           // onBlur={passwordValidation({ password })}
         />
-        <LoginButton
+        <RegisterButton
           type="submit"
-          onClick={handleSubmitLoginUser}
         >
-          Login
-        </LoginButton>
-        {auth._delegate.currentUser.email && (
-          <LoginButton
-            type="submit"
-            onClick={handleSubmitCreateUser}
-          >
-            Register
-          </LoginButton>
-        )}
+          Register
+        </RegisterButton>
       </form>
-    </LoginContainer>
+    </RegisterContainer>
   );
 }
  
-export default Login;
+export default Register;

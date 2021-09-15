@@ -1,5 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { doc, setDoc } from "firebase/firestore";
+import { useHistory } from "react-router-dom";
+
+import { auth, db } from '../../firebase';
  
 const AccounterContainer = styled.div`
   display: flex;
@@ -63,12 +67,25 @@ const LogoutButton = styled.button`
   padding: 8px 16px;
   margin-top: 60px;
 `
-
+console.log(auth)
 const Accounter = () => {
+  let history = useHistory();
 
-  const logout = async() => (
-    console.log('logout')
-  )
+  const logout = async() => {
+    auth.signOut()
+    saveLogoutDate({ date: new Date, email: 'test1@hotmail.com'})
+    return history.push('/login')
+  }
+
+  const saveLogoutDate = async ({ date, email }) => {
+    console.log('entro en saveLogoutDate fuction')
+    console.log(date, email)
+
+    await setDoc(doc(db, "logoutDate", "date"), {
+      date: date,
+      email: email
+    })
+  };
 
   return (
     <AccounterContainer>
