@@ -8,7 +8,7 @@ export const emailValidation = ({ email }) => {
 export const passwordValidation = ({ password }) => {
   console.log(password)
   // min 8 letter password, with at least a symbol, upper and lower case letters and a number
-  var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+  var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   console.log(re.test(password))
   return re.test(password);
 }

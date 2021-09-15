@@ -18,7 +18,7 @@ function App() {
     <Router>
       <Switch>
         <AppContainer>
-          <Route path="/login" exact>
+          <Route path="/" exact>
             <Login />
           </Route>
           <Route path="/accounter" exact>

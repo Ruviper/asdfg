@@ -19,12 +19,6 @@ const LoginContainer = styled.div`
   }
 
   width: 50%;
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 `;
 
 const Form = styled.form`
@@ -80,7 +74,10 @@ const Login = () => {
     try {
       setError('')
       await auth.createUserWithEmailAndPassword(email, password)
-      history.push('/login')
+      setLoginObject({
+        email: '',
+        password: ''
+      })
     } catch {
       setError('Revisa los datos para la creación del usuario')
     }
@@ -94,11 +91,11 @@ const Login = () => {
       await auth.signInWithEmailAndPassword(email, password)
       return history.push('/accounter')
     } catch {
-      setError('Revisa los datos para loguearte')
+      setError('Revisa tus datos de acceso')
     }
   }
   console.log('ERROR', error)
-
+  
   return (
 
     <LoginContainer>
@@ -130,11 +127,10 @@ const Login = () => {
           onChange={handleChangeLogin}
           onFocus={() => setError('')}
           onBlur={() => {
-            setError('')
             passwordValidation({ password })
-            return !passwordValidation && setError('Password inválido')
+            !passwordValidation && setError('min 8 letter password, with at least a symbol, upper and lower case letters and a numberPassword inválido')
+            return
           }}
-          // onBlur={passwordValidation({ password })}
         />
         <LoginButton
           type="submit"
@@ -142,14 +138,12 @@ const Login = () => {
         >
           Login
         </LoginButton>
-        {auth && (
-          <LoginButton
-            type="submit"
-            onClick={handleSubmitCreateUser}
-          >
-            Register
-          </LoginButton>
-        )}
+        <LoginButton
+          type="submit"
+          onClick={handleSubmitCreateUser}
+        >
+          Register
+        </LoginButton>
       </Form>
     </LoginContainer>
   );

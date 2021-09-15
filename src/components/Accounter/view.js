@@ -7,14 +7,14 @@ import { auth, db } from '../../firebase';
  
 const AccounterContainer = styled.div`
   @media (max-width: 640px) {
-    width: 50%;
+    width: 90%;
   }
-  
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90%;
+  width: 50%;
   height: 100%;
   margin: 0 auto;
 
@@ -75,7 +75,7 @@ const Accounter = () => {
   const logout = async() => {
     auth.signOut()
     saveLogoutDate({ date: new Date, email: 'test1@hotmail.com'})
-    return history.push('/login')
+    return history.push('/')
   }
 
   const saveLogoutDate = async ({ date, email }) => {
