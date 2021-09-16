@@ -5,11 +5,7 @@ import { doc, setDoc, collection } from 'firebase/firestore';
 import { ReactComponent as PadlockSvg } from '../../assets/padlock.svg';
 
 import { auth, db } from '../../firebase';
-import {
-  LoginContainer,
-  Form,
-  PadlockImage,
-} from './styles';
+import { LoginContainer, Form } from './styles';
 import { emailValidation, passwordValidation } from '../../validations/validations';
 import ButtonComponent from '../Button';
 import InputComponent from '../Input';

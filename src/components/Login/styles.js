@@ -22,9 +22,3 @@ export const Form = styled.form`
   width: 100%;
   margin-top: 48px;
 `;
-
-export const PadlockImage = styled.img`
-  width: 100px;
-  height: 100px;
-  margin-bottom: 24px;
-`;
