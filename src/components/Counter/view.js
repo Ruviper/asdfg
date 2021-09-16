@@ -15,12 +15,8 @@ import {
   TimeNumber,
   TimeText
 } from './styles';
- 
-console.log('auth email!!!!', auth?._delegate?.currentUser?.email)
-console.log(auth)
 
 const Accounter = () => {
-  const [firebaseEmail, setFirebaseEmail] = useState(null);
   const [diffDate, setDiffDate] = useState({
     days: '',
     hours: '',
