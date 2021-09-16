@@ -1,55 +1,19 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 import { Alert } from 'react-bootstrap';
 import { doc, setDoc, collection } from "firebase/firestore";
 
 import { auth, db } from '../../firebase';
-
+import {
+  LoginContainer,
+  Form,
+  PadlockImage
+} from './styles';
 import { emailValidation, passwordValidation } from '../../validations/validations';
-import ButtonComponent from '../Button'
-import InputComponent from '../Input'
+import ButtonComponent from '../Button';
+import InputComponent from '../Input';
  
-const LoginContainer = styled.div`
-  @media (max-width: 640px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 90%;
-    height: 100%;
-    margin: 0 auto;
-  }
-  
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 50%;
-  height: 100%;
-  margin: 0 auto;
-`;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-const Input = styled.input`
-  width: calc(100% - 100px);
-  border: none;
-  border-bottom: 2px solid black;
-  padding-left: 12px;
-  margin-bottom: 16px;
-`;
-
-const PadlockImage = styled.img`
-  width: 100px;
-  height: 100px;
-  margin-bottom: 24px;
-`
 
 const Login = () => {
   const [loginObject, setLoginObject ] = useState({

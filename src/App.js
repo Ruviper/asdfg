@@ -6,8 +6,7 @@ import {
 } from 'react-router-dom';
 
 import Login from './components/Login';
-import Accounter from './components/Accounter';
-import Register from './components/Register';
+import Counter from './components/Counter';
 
 const AppContainer = styled.div`
   height: 100vh;
@@ -18,14 +17,11 @@ function App() {
     <Router>
       <Switch>
         <AppContainer>
-          <Route path="/login-register" exact>
-            <Login />
-          </Route>
-          <Route path="/accounter" exact>
-            <Accounter />
+          <Route path="/counter" exact>
+            <Counter />
           </Route>
           <Route path="/" exact>
-            <Register />
+            <Login />
           </Route>
         </AppContainer>
       </Switch>
