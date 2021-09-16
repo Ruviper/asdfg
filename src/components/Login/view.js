@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 import { Alert } from 'react-bootstrap';
-import { doc, getDoc } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 
 import { auth, db } from '../../firebase';
 
@@ -61,6 +61,19 @@ const Login = () => {
 
   let history = useHistory();
 
+  const saveLoginDate = async ({ date, email }) => {
+    try {
+      const logoutDateRef = collection(db, "logoutDate");
+
+      await setDoc(doc(logoutDateRef, email), {
+        loginDate: date,
+        email: email
+      })
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   const handleChangeLogin = e => (
     setLoginObject({
       ...loginObject,
@@ -79,6 +92,7 @@ const Login = () => {
         email: '',
         password: ''
       })
+      return history.push('/accounter');
     } catch {
       setError('Revisa los datos para la creación del usuario')
     }
@@ -92,6 +106,11 @@ const Login = () => {
     try {
       setError('')
       await auth.signInWithEmailAndPassword(email, password)
+
+      const date = new Date();
+      const timestamp = date.getTime();
+      await saveLoginDate({ date: timestamp, email: "ruben2@hotmail.com" })
+
       history.push('/accounter')
     } catch {
       setError('Revisa tus datos de acceso') 

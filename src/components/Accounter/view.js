@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { ref, set } from 'firebase/database';
 import { useHistory } from "react-router-dom";
-import { collection, addDoc } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import { DateTime } from 'luxon'
 
 import { auth, db } from '../../firebase';
@@ -87,45 +86,49 @@ const Accounter = () => {
     //   setFirebaseEmail(email)
     // }
     // getCurrentEmail()
-    console.log('entro de useEffect')
-    const getLogoutDate = async() => {
-      const docRef = doc(db, "logoutDate", "ruben@hotmail.com");
-      const docSnap = await getDoc(docRef);
-      console.log('docSnap.data()', docSnap.data())
-      const timestamp = docSnap.data().logoutDate
-      console.log('timeStamp logoutDate', timestamp)
-      var actualDate = new Date().getTime();
-  
-      console.log('actualDate', actualDate)
+    const getDiffTime = async() => {
+      const logoutTime = await getLogoutTime();
+      const actualDateLuxon = DateTime.fromMillis(getCurrentTime());
+      const diff = logoutTime !== undefined ? actualDateLuxon.diff(logoutTime, ['days', 'hours', 'minutes', 'seconds']) : DateTime.now().toObject();
+      const values = diff.values;
 
-      const logoutDateLuxon = DateTime.fromMillis(timestamp);
-      console.log('logoutDateFormatted', logoutDateLuxon)
-      const actualDateLuxon = DateTime.fromMillis(actualDate)
-      console.log('actualDateLuxon', actualDateLuxon)
-      const diff = actualDateLuxon.diff(logoutDateLuxon, ['days', 'hours', 'minutes', 'seconds'])
-      const { days, hours, minutes, seconds } = diff.values;
-      console.log('diff', diff.values)
       setDiffDate({
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds.toFixed()
+        days: values.days,
+        hours: values.hours,
+        minutes: values.minutes,
+        seconds: values.seconds.toFixed()
       })
-      console.log('seconds', seconds.toFixed())
-      console.log(typeof(seconds.toFixed()))
+     
     }
-    getLogoutDate()
+    
+    let getDiffTimeInverval = () => setInterval(() => {
+      console.log('setInterval!!!')
+      getDiffTime()
+    }, 1000)
+    getDiffTimeInverval();
+    getDiffTime()
+    return clearInterval(getDiffTimeInverval)
   }, [])
 
   let history = useHistory();
+
+  const getCurrentTime = () => (
+    new Date().getTime()
+  )
+
+  const getLogoutTime = async() => {
+    const docRef = doc(db, "logoutDate", "ruben@hotmail.com");
+    const docSnap = await getDoc(docRef);
+    const logoutDateTimestamp = docSnap.data().logoutDate;
+    return logoutDateTimestamp !== undefined ? DateTime.fromMillis(logoutDateTimestamp) : undefined;
+  }
 
   const logout = async() => {
     const date = new Date();
     const timestamp = date.getTime();
     await saveLogoutDate({ date: timestamp, email: "ruben@hotmail.com" })
-    // await auth.signOut()
-    return
-    // return history.push('/')
+    await auth.signOut()
+    return history.push('/login-register')
   }
 
   const saveLogoutDate = async ({ date, email }) => {
