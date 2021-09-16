@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 import { Alert } from 'react-bootstrap';
-import { collection, getDocs } from "firebase/firestore";
 import { doc, getDoc } from "firebase/firestore";
 
 import { auth, db } from '../../firebase';
@@ -51,14 +50,6 @@ const PadlockImage = styled.img`
   margin-bottom: 24px;
 `
 
-const LoginButton = styled.button`
-  width: calc(100% - 100px);
-  background-color: #1973b8;
-  color: #fff;
-  padding: 8px 16px;
-  margin-top: 16px;
-`
-
 const Login = () => {
   const [loginObject, setLoginObject ] = useState({
     email: '',
@@ -82,6 +73,7 @@ const Login = () => {
     
     try {
       setError('')
+      
       await auth.createUserWithEmailAndPassword(email, password)
       setLoginObject({
         email: '',
@@ -100,51 +92,14 @@ const Login = () => {
     try {
       setError('')
       await auth.signInWithEmailAndPassword(email, password)
-      // const docRef = doc(db, "users", email);
-      // console.log('email', email)
-      // const docSnap = await getDoc(docRef);
-      // console.log('docSnap.email', docSnap.data().email === email)
-      // const timeStamp = docSnap.data().date.seconds
-      // console.log('timeStamp', timeStamp)
-
-      // if (docSnap.exists()) {
-      //   console.log("Document data:", docSnap.data());
-      // } else {
-      //   // doc.data() will be undefined in this case
-      //   console.log("No such document!");
-      // }
-      return 
-      // history.push('/accounter')
+      history.push('/accounter')
     } catch {
-      const docRef = doc(db, "users", "QiNAHHggUWDLsHgqcs7B");
-      console.log('email', email)
-      const docSnap = await getDoc(docRef);
-      console.log('docSnap.email', docSnap.data().email)
-      console.log('isTrue???', docSnap.data().email === email)
-      const timestamp = docSnap.data().date
-      console.log('timeStamp', timestamp)
-      var date = new Date(timestamp);
-
-      console.log("Date: "+date.getDate()+
-        "/"+(date.getMonth()+1)+
-        "/"+date.getFullYear()+
-        " "+date.getHours()+
-        ":"+date.getMinutes()+
-        ":"+date.getSeconds());
-
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-      setError('Revisa tus datos de acceso')
+      setError('Revisa tus datos de acceso') 
     }
   }
   console.log('ERROR', error)
   
   return (
-
     <LoginContainer>
       <div>
         <PadlockImage src="../../assets/padlock.svg" />
@@ -175,7 +130,7 @@ const Login = () => {
           onFocus={() => setError('')}
           onBlur={() => {
             passwordValidation({ password })
-            !passwordValidation && setError('min 8 letter password, with at least a symbol, upper and lower case letters and a numberPassword inválido')
+            !passwordValidation && setError('Min 8 letter password, with at least a symbol, upper and lower case letters and a numberPassword inválido')
             return
           }}
         />

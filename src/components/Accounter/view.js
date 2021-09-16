@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { ref, set } from 'firebase/database';
 import { useHistory } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
+import { DateTime } from 'luxon'
 
 import { auth, db } from '../../firebase';
 import ButtonComponent from '../Button'
@@ -68,27 +69,73 @@ console.log('auth email!!!!', auth._delegate.currentUser !== null ? auth._delega
 console.log(auth)
 
 const Accounter = () => {
+  const [firebaseEmail, setFirebaseEmail] = useState(null);
+  const [diffDate, setDiffDate] = useState({
+    days: '',
+    hours: '',
+    minutes: '',
+    seconds: ''
+  })
+
+  const { days, hours, minutes, seconds } = diffDate;
+
+  useEffect(() => {
+    // const getCurrentEmail = async() => {
+    //   const email = await auth._delegate.currentUser.email
+    //   console.log('email', email)
+    //   console.log('firebaseEmail', firebaseEmail)
+    //   setFirebaseEmail(email)
+    // }
+    // getCurrentEmail()
+    console.log('entro de useEffect')
+    const getLogoutDate = async() => {
+      const docRef = doc(db, "logoutDate", "ruben@hotmail.com");
+      const docSnap = await getDoc(docRef);
+      console.log('docSnap.data()', docSnap.data())
+      const timestamp = docSnap.data().logoutDate
+      console.log('timeStamp logoutDate', timestamp)
+      var actualDate = new Date().getTime();
+  
+      console.log('actualDate', actualDate)
+
+      const logoutDateLuxon = DateTime.fromMillis(timestamp);
+      console.log('logoutDateFormatted', logoutDateLuxon)
+      const actualDateLuxon = DateTime.fromMillis(actualDate)
+      console.log('actualDateLuxon', actualDateLuxon)
+      const diff = actualDateLuxon.diff(logoutDateLuxon, ['days', 'hours', 'minutes', 'seconds'])
+      const { days, hours, minutes, seconds } = diff.values;
+      console.log('diff', diff.values)
+      setDiffDate({
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds.toFixed()
+      })
+      console.log('seconds', seconds.toFixed())
+      console.log(typeof(seconds.toFixed()))
+    }
+    getLogoutDate()
+  }, [])
+
   let history = useHistory();
 
   const logout = async() => {
-    const fecha = new Date();
-    const timestamp = fecha.getTime();
-    await saveLogoutDate({ date: timestamp, email: auth._delegate.currentUser.email })
+    const date = new Date();
+    const timestamp = date.getTime();
+    await saveLogoutDate({ date: timestamp, email: "ruben@hotmail.com" })
     // await auth.signOut()
     return
     // return history.push('/')
   }
 
   const saveLogoutDate = async ({ date, email }) => {
-    console.log('entro en saveLogoutDate fuction')
-    console.log(date, email)
-
     try {
-      const docRef = await addDoc(collection(db, "users"), {
-        date: date,
-        email: email,
-      });
-      console.log("Document written with ID: ", docRef.id);
+      const logoutDateRef = collection(db, "logoutDate");
+
+      await setDoc(doc(logoutDateRef, email), {
+        logoutDate: date,
+        email: email
+      })
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -104,19 +151,19 @@ const Accounter = () => {
       </Subtitle>
       <TimeContainer>
         <TimeColumn>
-          <TimeNumber>00</TimeNumber>
+          <TimeNumber>{days}</TimeNumber>
           <TimeText>days</TimeText>
         </TimeColumn>
         <TimeColumn>
-          <TimeNumber>00</TimeNumber>
+          <TimeNumber>{hours}</TimeNumber>
           <TimeText>hours</TimeText>
         </TimeColumn>
         <TimeColumn>
-          <TimeNumber>00</TimeNumber>
+          <TimeNumber>{minutes}</TimeNumber>
           <TimeText>minutes</TimeText>
         </TimeColumn>
         <TimeColumn>
-          <TimeNumber>00</TimeNumber>
+          <TimeNumber>{seconds}</TimeNumber>
           <TimeText>seconds</TimeText>
         </TimeColumn>
       </TimeContainer>
