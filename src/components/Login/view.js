@@ -8,6 +8,7 @@ import { auth, db } from '../../firebase';
 
 import { emailValidation, passwordValidation } from '../../validations/validations';
 import ButtonComponent from '../Button'
+import InputComponent from '../Input'
  
 const LoginContainer = styled.div`
   @media (max-width: 640px) {
@@ -130,7 +131,7 @@ const Login = () => {
       <Form
         onSubmit=""
       >
-        <Input
+        <InputComponent
           type="email"
           name="email"
           placeholder="Email"
@@ -143,7 +144,7 @@ const Login = () => {
             return !emailValidation && setError('Email inválido')
           }}
         />
-        <Input
+        <InputComponent
           type="password"
           name="password"
           placeholder="Password"
