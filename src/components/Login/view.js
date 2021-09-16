@@ -63,9 +63,9 @@ const Login = () => {
 
   const saveLoginDate = async ({ date, email }) => {
     try {
-      const logoutDateRef = collection(db, "logoutDate");
+      const loginDateRef = collection(db, "loginDate");
 
-      await setDoc(doc(logoutDateRef, email), {
+      await setDoc(doc(loginDateRef, email), {
         loginDate: date,
         email: email
       })
@@ -92,6 +92,9 @@ const Login = () => {
         email: '',
         password: ''
       })
+      const date = new Date();
+      const timestamp = date.getTime();
+      await saveLoginDate({ date: timestamp, email: email })
       return history.push('/accounter');
     } catch {
       setError('Revisa los datos para la creación del usuario')
@@ -109,7 +112,7 @@ const Login = () => {
 
       const date = new Date();
       const timestamp = date.getTime();
-      await saveLoginDate({ date: timestamp, email: "ruben2@hotmail.com" })
+      await saveLoginDate({ date: timestamp, email: email })
 
       history.push('/accounter')
     } catch {

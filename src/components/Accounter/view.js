@@ -64,7 +64,7 @@ const TimeText = styled.p`
   font-weight: 400;
 `;
 
-console.log('auth email!!!!', auth._delegate.currentUser !== null ? auth._delegate.currentUser.email : 'es null' )
+console.log('auth email!!!!', auth?._delegate?.currentUser?.email)
 console.log(auth)
 
 const Accounter = () => {
@@ -79,17 +79,12 @@ const Accounter = () => {
   const { days, hours, minutes, seconds } = diffDate;
 
   useEffect(() => {
-    // const getCurrentEmail = async() => {
-    //   const email = await auth._delegate.currentUser.email
-    //   console.log('email', email)
-    //   console.log('firebaseEmail', firebaseEmail)
-    //   setFirebaseEmail(email)
-    // }
-    // getCurrentEmail()
     const getDiffTime = async() => {
       const logoutTime = await getLogoutTime();
+      console.log('logoutTime', logoutTime)
       const actualDateLuxon = DateTime.fromMillis(getCurrentTime());
-      const diff = logoutTime !== undefined ? actualDateLuxon.diff(logoutTime, ['days', 'hours', 'minutes', 'seconds']) : DateTime.now().toObject();
+      const diff = actualDateLuxon.diff(logoutTime, ['days', 'hours', 'minutes', 'seconds']);
+      console.log('diff!!!!', diff)
       const values = diff.values;
 
       setDiffDate({
@@ -107,7 +102,9 @@ const Accounter = () => {
     }, 1000)
     getDiffTimeInverval();
     getDiffTime()
-    return clearInterval(getDiffTimeInverval)
+    return () => {
+      clearInterval(getDiffTimeInverval)
+    }
   }, [])
 
   let history = useHistory();
@@ -117,16 +114,22 @@ const Accounter = () => {
   )
 
   const getLogoutTime = async() => {
-    const docRef = doc(db, "logoutDate", "ruben@hotmail.com");
+    const docRef = doc(db, "logoutDate", `${auth?._delegate?.currentUser?.email}`);
     const docSnap = await getDoc(docRef);
-    const logoutDateTimestamp = docSnap.data().logoutDate;
-    return logoutDateTimestamp !== undefined ? DateTime.fromMillis(logoutDateTimestamp) : undefined;
+    const docRef2 = doc(db, "loginDate", `${auth?._delegate?.currentUser?.email}`);
+    console.log('docRef2', docRef2)
+    const docSnap2 = await getDoc(docRef2);
+    console.log('docSnap2', docSnap2)
+    const loginDateTimestamp = docSnap2.data()?.loginDate;
+    console.log('loginDateTimestamp', loginDateTimestamp)
+    const logoutDateTimestamp = docSnap.data()?.logoutDate;
+    return logoutDateTimestamp !== undefined ? DateTime.fromMillis(logoutDateTimestamp) : DateTime.fromMillis(loginDateTimestamp);
   }
 
   const logout = async() => {
     const date = new Date();
     const timestamp = date.getTime();
-    await saveLogoutDate({ date: timestamp, email: "ruben@hotmail.com" })
+    await saveLogoutDate({ date: timestamp, email: `${auth?._delegate?.currentUser?.email}` })
     await auth.signOut()
     return history.push('/login-register')
   }
