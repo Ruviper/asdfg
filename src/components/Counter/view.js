@@ -46,17 +46,11 @@ const Accounter = () => {
         seconds: values.seconds.toFixed(),
       }) 
     }
-
-    // const interval = setInterval(() => {
-    //   console.log('This will run every second!');
-    // }, 1000);
-    // return () => clearInterval(interval);
     
     let getDiffTimeInverval = setInterval(() => {
       console.log('setInterval!!!')
       getDiffTime();
     }, 1000)
-    // getDiffTimeInverval();
     getDiffTime()
     return () => clearInterval(getDiffTimeInverval);;
   }, []);
