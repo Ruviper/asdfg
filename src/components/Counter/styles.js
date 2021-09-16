@@ -12,7 +12,6 @@ export const CounterContainer = styled.div`
   width: 50%;
   height: 100%;
   margin: 0 auto;
-
 `;
 
 export const Title = styled.h1`
@@ -52,6 +51,5 @@ export const TimeText = styled.p`
   font-size: 1em;
   color: gray;
   margin: 0;
-
   font-weight: 400;
 `;

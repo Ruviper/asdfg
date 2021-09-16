@@ -60,7 +60,7 @@ const Login = () => {
       const date = new Date();
       const timestamp = date.getTime();
       await saveLoginDate({ date: timestamp, email: email })
-      return history.push('/accounter');
+      return history.push('/counter');
     } catch {
       setError('Revisa los datos para la creación del usuario')
     }
@@ -79,7 +79,7 @@ const Login = () => {
       const timestamp = date.getTime();
       await saveLoginDate({ date: timestamp, email: email })
 
-      history.push('/accounter')
+      history.push('/counter')
     } catch {
       setError('Revisa tus datos de acceso') 
     }

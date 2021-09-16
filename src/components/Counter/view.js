@@ -44,19 +44,21 @@ const Accounter = () => {
         hours: values.hours,
         minutes: values.minutes,
         seconds: values.seconds.toFixed(),
-      })
-     
+      }) 
     }
+
+    // const interval = setInterval(() => {
+    //   console.log('This will run every second!');
+    // }, 1000);
+    // return () => clearInterval(interval);
     
-    let getDiffTimeInverval = () => setInterval(() => {
+    let getDiffTimeInverval = setInterval(() => {
       console.log('setInterval!!!')
       getDiffTime();
     }, 1000)
-    getDiffTimeInverval();
+    // getDiffTimeInverval();
     getDiffTime()
-    return () => {
-      clearInterval(getDiffTimeInverval);
-    };
+    return () => clearInterval(getDiffTimeInverval);;
   }, []);
 
   let history = useHistory();
@@ -66,15 +68,15 @@ const Accounter = () => {
   );
 
   const getLogoutTime = async() => {
-    const docRef = doc(db, "logoutDate", `${auth?._delegate?.currentUser?.email}`);
-    const docSnap = await getDoc(docRef);
-    const docRef2 = doc(db, "loginDate", `${auth?._delegate?.currentUser?.email}`);
-    console.log('docRef2', docRef2)
-    const docSnap2 = await getDoc(docRef2);
-    console.log('docSnap2', docSnap2)
-    const loginDateTimestamp = docSnap2.data()?.loginDate;
+    const docRefLogoutDate = doc(db, "logoutDate", `${auth?._delegate?.currentUser?.email}`);
+    const docSnapLogoutDate = await getDoc(docRefLogoutDate);
+    const docRefLogintDate = doc(db, "loginDate", `${auth?._delegate?.currentUser?.email}`);
+    console.log('docRefLogintDate', docRefLogintDate)
+    const docSnapLoginDate = await getDoc(docRefLogintDate);
+    console.log('docSnapLoginDate', docSnapLoginDate)
+    const loginDateTimestamp = docSnapLoginDate.data()?.loginDate;
     console.log('loginDateTimestamp', loginDateTimestamp)
-    const logoutDateTimestamp = docSnap.data()?.logoutDate;
+    const logoutDateTimestamp = docSnapLogoutDate.data()?.logoutDate;
     return logoutDateTimestamp !== undefined ? DateTime.fromMillis(logoutDateTimestamp) : DateTime.fromMillis(loginDateTimestamp);
   };
 
@@ -83,7 +85,7 @@ const Accounter = () => {
     const timestamp = date.getTime();
     await saveLogoutDate({ date: timestamp, email: `${auth?._delegate?.currentUser?.email}` });
     await auth.signOut();
-    return history.push('/login-register');
+    return history.push('/');
   };
 
   const saveLogoutDate = async ({ date, email }) => {
