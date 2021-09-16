@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
-import { doc, setDoc, collection } from "firebase/firestore";
+import { doc, setDoc, collection } from 'firebase/firestore';
+import { ReactComponent as PadlockSvg } from '../../assets/padlock.svg';
 
 import { auth, db } from '../../firebase';
 import {
   LoginContainer,
   Form,
-  PadlockImage
+  PadlockImage,
 } from './styles';
 import { emailValidation, passwordValidation } from '../../validations/validations';
 import ButtonComponent from '../Button';
 import InputComponent from '../Input';
  
-
-
 const Login = () => {
   const [loginObject, setLoginObject ] = useState({
     email: '',
@@ -28,14 +27,14 @@ const Login = () => {
 
   const saveLoginDate = async ({ date, email }) => {
     try {
-      const loginDateRef = collection(db, "loginDate");
+      const loginDateRef = collection(db, 'loginDate');
 
       await setDoc(doc(loginDateRef, email), {
         loginDate: date,
         email: email
       })
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error('Error adding document: ', e);
     }
   };
 
@@ -55,33 +54,31 @@ const Login = () => {
       await auth.createUserWithEmailAndPassword(email, password)
       setLoginObject({
         email: '',
-        password: ''
+        password: '',
       })
       const date = new Date();
       const timestamp = date.getTime();
-      await saveLoginDate({ date: timestamp, email: email })
+      await saveLoginDate({ date: timestamp, email: email });
       return history.push('/counter');
     } catch {
-      setError('Revisa los datos para la creación del usuario')
+      setError('Check your registration data');
     }
   }
   
-  console.log(auth)
-
   const handleSubmitLoginUser = async(e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      setError('')
-      await auth.signInWithEmailAndPassword(email, password)
+      setError('');
+      await auth.signInWithEmailAndPassword(email, password);
 
       const date = new Date();
       const timestamp = date.getTime();
-      await saveLoginDate({ date: timestamp, email: email })
+      await saveLoginDate({ date: timestamp, email: email });
 
-      history.push('/counter')
+      history.push('/counter');
     } catch {
-      setError('Revisa tus datos de acceso') 
+      setError('Check your access data');
     }
   }
   console.log('ERROR', error)
@@ -89,51 +86,43 @@ const Login = () => {
   return (
     <LoginContainer>
       <div>
-        <PadlockImage src="../../assets/padlock.svg" />
+        <PadlockSvg src='../../assets/padlock.svg' />
       </div>
-      {error && <Alert variant="danger">{error}</Alert>}
       <Form
-        onSubmit=""
+        onSubmit=''
       >
         <InputComponent
-          type="email"
-          name="email"
-          placeholder="Email"
+          type='email'
+          name='email'
+          placeholder='Email'
           value={email}
           onChange={handleChangeLogin}
           onFocus={() => setError('')}
-          onBlur={() => {
-            setError('')
-            emailValidation({ email })
-            return !emailValidation && setError('Email inválido')
-          }}
+          onBlur={() => !emailValidation({ email }) && setError('Invalid email format')}
         />
         <InputComponent
-          type="password"
-          name="password"
-          placeholder="Password"
+          type='password'
+          name='password'
+          placeholder='Password'
           value={password}
           onChange={handleChangeLogin}
           onFocus={() => setError('')}
-          onBlur={() => {
-            passwordValidation({ password })
-            !passwordValidation && setError('Min 8 letter password, with at least a symbol, upper and lower case letters and a numberPassword inválido')
-            return
-          }}
+          onBlur={() => !passwordValidation({ password }) && setError('Min 8 letter password, with at least a symbol, upper and lower case letters and a number')}
         />
+        {error && <Alert variant='danger'>{error}</Alert>}
         <ButtonComponent
-          type="submit"
+          type='submit'
           onClick={handleSubmitLoginUser}
-          title="Login"
+          title='Login'
         />
         <ButtonComponent
-          type="submit"
+          type='submit'
           onClick={handleSubmitCreateUser}
-          title="Register"
+          title='Register'
         />
       </Form>
     </LoginContainer>
   );
-}
+};
  
 export default Login;

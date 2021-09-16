@@ -14,6 +14,6 @@ const InputComponent = ({ type, name, placeholder, value, onChange, onFocus, onB
       onBlur={onBlur}
     />
   );
-}
+};
  
 export default InputComponent;

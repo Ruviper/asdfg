@@ -1,16 +1,11 @@
 import styled from 'styled-components';
 
-export const LoginContainer = styled.div`
+export const LoginContainer = styled.div` 
   @media (max-width: 640px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 90%;
     height: 100%;
-    margin: 0 auto;
   };
-  
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,6 +20,7 @@ export const Form = styled.form`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-top: 48px;
 `;
 
 export const PadlockImage = styled.img`

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { useHistory } from "react-router-dom";
-import { collection } from "firebase/firestore";
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { useHistory } from 'react-router-dom';
+import { collection } from 'firebase/firestore';
 import { DateTime } from 'luxon';
 
 import { auth, db } from '../../firebase';
@@ -13,7 +13,7 @@ import {
   TimeContainer,
   TimeColumn,
   TimeNumber,
-  TimeText
+  TimeText,
 } from './styles';
 
 const Accounter = () => {
@@ -46,27 +46,27 @@ const Accounter = () => {
     let getDiffTimeInverval = setInterval(() => {
       console.log('setInterval!!!')
       getDiffTime();
-    }, 1000)
-    getDiffTime()
-    return () => clearInterval(getDiffTimeInverval);;
+    }, 1000);
+    getDiffTime();
+    return () => clearInterval(getDiffTimeInverval);
   }, []);
 
   let history = useHistory();
 
-  const getCurrentTime = () => (
-    new Date().getTime()
-  );
+  const getCurrentTime = () => new Date().getTime();
 
   const getLogoutTime = async() => {
-    const docRefLogoutDate = doc(db, "logoutDate", `${auth?._delegate?.currentUser?.email}`);
+    const docRefLogoutDate = doc(db,'"logoutDate', `${auth?._delegate?.currentUser?.email}`);
     const docSnapLogoutDate = await getDoc(docRefLogoutDate);
-    const docRefLogintDate = doc(db, "loginDate", `${auth?._delegate?.currentUser?.email}`);
-    console.log('docRefLogintDate', docRefLogintDate)
+    console.log('docSnapLogoutDate', docSnapLogoutDate)
+    const docRefLogintDate = doc(db, 'loginDate', `${auth?._delegate?.currentUser?.email}`);
+    // console.log('docRefLogintDate', docRefLogintDate)
     const docSnapLoginDate = await getDoc(docRefLogintDate);
-    console.log('docSnapLoginDate', docSnapLoginDate)
+    // console.log('docSnapLoginDate', docSnapLoginDate)
     const loginDateTimestamp = docSnapLoginDate.data()?.loginDate;
-    console.log('loginDateTimestamp', loginDateTimestamp)
+    // console.log('loginDateTimestamp', loginDateTimestamp)
     const logoutDateTimestamp = docSnapLogoutDate.data()?.logoutDate;
+    console.log('logoutDateTimestamp', logoutDateTimestamp)
     return logoutDateTimestamp !== undefined ? DateTime.fromMillis(logoutDateTimestamp) : DateTime.fromMillis(loginDateTimestamp);
   };
 
@@ -80,14 +80,15 @@ const Accounter = () => {
 
   const saveLogoutDate = async ({ date, email }) => {
     try {
-      const logoutDateRef = collection(db, "logoutDate");
+      const logoutDateRef = collection(db, 'logoutDate');
 
       await setDoc(doc(logoutDateRef, email), {
         logoutDate: date,
         email: email,
       })
+      console.log('saveLogoutDate', date, email)
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error('Error adding document: ', e);
     };
   };
 
@@ -119,11 +120,11 @@ const Accounter = () => {
       </TimeContainer>
       <ButtonComponent
         onClick={logout}
-        title="Logout"
-        type="submit"
+        title='Logout'
+        type='submit'
       />
     </CounterContainer>
   );
-}
+};
  
 export default Accounter;
