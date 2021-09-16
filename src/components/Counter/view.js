@@ -28,11 +28,9 @@ const Accounter = () => {
 
   useEffect(() => {
     const getDiffTime = async() => {
-      const logoutTime = await getLogoutTime();
-      console.log('logoutTime', logoutTime)
+      const loginOrLogoutTime = await getLoginOrLogoutTime();
       const actualDateLuxon = DateTime.fromMillis(getCurrentTime());
-      const diff = actualDateLuxon.diff(logoutTime, ['days', 'hours', 'minutes', 'seconds']);
-      console.log('diff!!!!', diff)
+      const diff = actualDateLuxon.diff(loginOrLogoutTime, ['days', 'hours', 'minutes', 'seconds']);
       const values = diff.values;
 
       setDiffDate({
@@ -44,7 +42,6 @@ const Accounter = () => {
     }
     
     let getDiffTimeInverval = setInterval(() => {
-      console.log('setInterval!!!')
       getDiffTime();
     }, 1000);
     getDiffTime();
@@ -55,18 +52,13 @@ const Accounter = () => {
 
   const getCurrentTime = () => new Date().getTime();
 
-  const getLogoutTime = async() => {
-    const docRefLogoutDate = doc(db,'"logoutDate', `${auth?._delegate?.currentUser?.email}`);
+  const getLoginOrLogoutTime = async() => {
+    const docRefLogoutDate = doc(db,'logoutDate', `${auth?._delegate?.currentUser?.email}`);
     const docSnapLogoutDate = await getDoc(docRefLogoutDate);
-    console.log('docSnapLogoutDate', docSnapLogoutDate)
     const docRefLogintDate = doc(db, 'loginDate', `${auth?._delegate?.currentUser?.email}`);
-    // console.log('docRefLogintDate', docRefLogintDate)
     const docSnapLoginDate = await getDoc(docRefLogintDate);
-    // console.log('docSnapLoginDate', docSnapLoginDate)
     const loginDateTimestamp = docSnapLoginDate.data()?.loginDate;
-    // console.log('loginDateTimestamp', loginDateTimestamp)
     const logoutDateTimestamp = docSnapLogoutDate.data()?.logoutDate;
-    console.log('logoutDateTimestamp', logoutDateTimestamp)
     return logoutDateTimestamp !== undefined ? DateTime.fromMillis(logoutDateTimestamp) : DateTime.fromMillis(loginDateTimestamp);
   };
 
@@ -86,7 +78,6 @@ const Accounter = () => {
         logoutDate: date,
         email: email,
       })
-      console.log('saveLogoutDate', date, email)
     } catch (e) {
       console.error('Error adding document: ', e);
     };

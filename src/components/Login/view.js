@@ -81,7 +81,6 @@ const Login = () => {
       setError('Check your access data');
     }
   }
-  console.log('ERROR', error)
   
   return (
     <LoginContainer>
