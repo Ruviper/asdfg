@@ -83,9 +83,7 @@ const Login = () => {
       <div>
         <PadlockSvg src='../../assets/padlock.svg' />
       </div>
-      <Form
-        onSubmit=''
-      >
+      <Form>
         <InputComponent
           type='email'
           name='email'
