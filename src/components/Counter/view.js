@@ -17,27 +17,37 @@ import {
 } from './styles';
 
 const Accounter = () => {
+  const getCurrentTime = () => new Date().getTime();
+
   const [diffDate, setDiffDate] = useState({
     days: '',
     hours: '',
     minutes: '',
     seconds: '',
   });
+  const [loginOrLogoutTime, setLoginOrLogoutTime] = useState(DateTime.fromMillis(getCurrentTime()))
 
   const { days, hours, minutes, seconds } = diffDate;
 
   useEffect(() => {
+    const loginOrLogoutTimeFunc = async() => {
+      const time = await getLoginOrLogoutTime()
+      setLoginOrLogoutTime(time)
+    };
+    loginOrLogoutTimeFunc()
+  },[])
+
+  useEffect(() => {
     const getDiffTime = async() => {
-      const loginOrLogoutTime = await getLoginOrLogoutTime();
       const actualDateLuxon = DateTime.fromMillis(getCurrentTime());
       const diff = actualDateLuxon.diff(loginOrLogoutTime, ['days', 'hours', 'minutes', 'seconds']);
       const values = diff.values;
 
       setDiffDate({
-        days: values.days,
-        hours: values.hours,
-        minutes: values.minutes,
-        seconds: values.seconds.toFixed(),
+        days: values?.days,
+        hours: values?.hours,
+        minutes: values?.minutes,
+        seconds: values?.seconds.toFixed(),
       }) 
     }
     
@@ -46,11 +56,9 @@ const Accounter = () => {
     }, 1000);
     getDiffTime();
     return () => clearInterval(getDiffTimeInverval);
-  }, []);
+  });
 
   let history = useHistory();
-
-  const getCurrentTime = () => new Date().getTime();
 
   const getLoginOrLogoutTime = async() => {
     const docRefLogoutDate = doc(db,'logoutDate', `${auth?._delegate?.currentUser?.email}`);
